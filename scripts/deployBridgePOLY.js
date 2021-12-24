@@ -4,6 +4,7 @@
 // When running the script with `npx hardhat run <script>` you'll find the Hardhat
 // Runtime Environment's members available in the global scope.
 const hre = require("hardhat");
+const addresses = require("./addresses.js")
 
 async function main() {
   // Hardhat always runs the compile task when running scripts with its command
@@ -14,8 +15,8 @@ async function main() {
   // await hre.run('compile');
 
   // We get the contract to deploy
-  const Ecoswap = await hre.ethers.getContractFactory("Ecoswap");
-  const bridge = await Ecoswap.deploy();
+  const EcoBridge = await hre.ethers.getContractFactory("EcoBridge");
+  const bridge = await EcoBridge.deploy("0xA643d0bC2EA22C31968740C793af6420AAAbe00b", "0xA643d0bC2EA22C31968740C793af6420AAAbe00b");
   await bridge.deployed()
 
   console.log("Bridge deployed to:", bridge.address);

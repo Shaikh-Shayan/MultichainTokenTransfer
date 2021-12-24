@@ -15,9 +15,14 @@ async function main() {
 
   // We get the contract to deploy
   const EcoBridge = await hre.ethers.getContractFactory("EcoBridge");
-  const bridge = await EcoBridge.deploy("0x09C5B7757E76A626ca126d90B4bA5e29BF69Bb06", "0x09C5B7757E76A626ca126d90B4bA5e29BF69Bb06");
+  const Ecoswap = await hre.ethers.getContractFactory("Ecoswap");
+
+  const token = await Ecoswap.deploy();
+  await token.deployed()
+  const bridge = await EcoBridge.deploy(token.address, token.address);
   await bridge.deployed()
 
+  console.log("Token deployed to:", token.address)
   console.log("Bridge deployed to:", bridge.address);
 }
 
