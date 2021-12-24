@@ -1,9 +1,12 @@
 node_modules
-.env
 coverage
 coverage.json
 typechain
+providers.json
+bridge-config.js
 
 #Hardhat files
 cache
 artifacts
+test
+
