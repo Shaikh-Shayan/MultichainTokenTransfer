@@ -29,7 +29,13 @@ const mintMatic = new adminWeb3Matic.eth.Contract(receiverABI, process.env.MATIC
 
 
 const postTransaction = async(obj) => {
-    axios.post(process.env.POST_URL, obj)
+    const header_config = {
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      }
+    }
+    axios.post(process.env.POST_URL, obj, header_config)
     .then(res => {
         console.log(`statusCode: ${res.status}`)
         console.log(res)
@@ -45,6 +51,7 @@ const postTransaction = async(obj) => {
     const tx_id = event.returnValues[0]
     const user = event.returnValues[1]
     const amount = event.returnValues[2]
+    const tx_hash_source = event.transactionHash
 
     const tx = await mintBsc.methods.mintEco(user,amount).send({ from: process.env.ADMIN_ADDRESS })
     if(tx){
@@ -52,8 +59,9 @@ const postTransaction = async(obj) => {
             amount: amount,
             txn_id: tx_id,
             source_address: user,
-            destination_blockchain_txn: tx
-        }
+            destination_blockchain_txn: tx.transactionHash,
+            source_blockchain_txn: tx_hash_source
+          }
 
         postTransaction(obj)
     }
