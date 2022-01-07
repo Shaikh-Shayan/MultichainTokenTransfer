@@ -45,47 +45,41 @@ const postTransaction = async(obj) => {
       })
 }
 
- recMatic.events.BridgeBurn()
+ recMatic.events.Locked()
   .on('data', async(event) => {
 
-    const tx_id = event.returnValues[0]
-    const user = event.returnValues[1]
-    const amount = event.returnValues[2]
-    const tx_hash_source = event.transactionHash
+    console.log("Request received")
 
-    const tx = await mintBsc.methods.mintEco(user,amount).send({ from: process.env.ADMIN_ADDRESS })
-    if(tx){
-        const obj = {
-            amount: amount,
-            txn_id: tx_id,
-            source_address: user,
-            destination_blockchain_txn: tx.transactionHash,
-            source_blockchain_txn: tx_hash_source
-          }
+    let tx_id = event.returnValues[0]
+    let chain_id = event.returnValues[1]
+    let benificiary = event.returnValues[2]
+    let amount = event.returnValues[3]
+    console.log(chain_id)
+    if (chain_id == 97){
+      const tx = await mintBsc.methods.mint(benificiary,amount).send({ from: process.env.ADMIN_ADDRESS })
+      if (tx){
+        console.log("Transaction succesful")
+       }
+   
+      }
+    })
 
-        postTransaction(obj)
-    }
-
-  })
-
- recBsc.events.BridgeBurn()
+ recBsc.events.Locked()
  .on('data', async(event) => {
+  console.log("Request received")
 
-   const tx_id = event.returnValues[0];
-   const user = event.returnValues[1];
-   const amount = event.returnValues[2];
-
-
-   const tx = await mintMatic.methods.mintEcoOrigin(user,amount).send({ from: process.env.ADMIN_ADDRESS })
-   if (tx){
-    const obj = {
-        amount: amount,
-        txn_id: tx_id,
-        source_address: user,
-        destination_blockchain_txn: tx
+  let tx_id = event.returnValues[0]
+  let chain_id = event.returnValues[1]
+  let benificiary = event.returnValues[2]
+  let amount = event.returnValues[3]
+  console.log(chain_id)
+  if (chain_id == 80001){
+    const tx = await mintMatic.methods.mint(benificiary,amount).send({ from: process.env.ADMIN_ADDRESS })
+    if (tx){
+      console.log("Transaction succesful")
+     }
+ 
     }
+  }
+)
 
-    postTransaction(obj)
-   }
-
-})
